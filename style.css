@@ -34,6 +34,11 @@ body {
     position: relative;
     background-color: #6d6f74;
     border-radius: 20%;
+    cursor: pointer;
+}
+
+.slot.selected {
+    background-color: #8d9096;
 }
 
 .slot b {
