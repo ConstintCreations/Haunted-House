@@ -20,6 +20,15 @@ const items = {
         itemFunction: () => { console.log("Test"); },
         hasDifferentViewVisual: false,
         viewVisual: ""
+    },
+    "painting": {
+        name: "Painting",
+        description: "A simple painting of a landscape that has 0176 written on the back.\n I wonder what that could mean?",
+        image: "images/rooms/room1/front/objects/painting.png",
+        hasItemFunction: false,
+        itemFunction: () => { return; },
+        hasDifferentViewVisual: true,
+        viewVisual: "images/painting-back.png"
     }
 }
 
@@ -50,6 +59,7 @@ let gameData = {
 
 let selectedSlotIndex;
 let currentRoomIndex = 0;
+let currentObject;
 
 const keyPromptEElement = document.querySelector(".key-prompt-e");
 const keyPromptQElement = document.querySelector(".key-prompt-q");
@@ -118,7 +128,11 @@ document.addEventListener("keydown", (e) => {
             const slot = gameData.inventory[selectedSlotIndex];
             itemViewNameElement.innerText = slot.name;
             itemViewDescriptionElement.innerText = slot.description;
-            itemViewImageElement.src = (slot.hasDifferentViewVisual ? slot.viewVisual : slot.image);
+            if (slot.hasDifferentViewVisual) {
+                itemViewImageElement.src = slot.viewVisual;
+            } else {
+                itemViewImageElement.src = slot.image;
+            }
             itemViewElement.style.display = "flex";
         } else {
             itemViewElement.style.display = "none";
@@ -192,6 +206,8 @@ function addItemToInventory(itemKey) {
                 image: item.image,
                 hasItemFunction: item.hasItemFunction,
                 itemFunction: item.itemFunction,
+                hasDifferentViewVisual: item.hasDifferentViewVisual,
+                viewVisual: item.viewVisual
             }
             updateSlotVisual(i);
             return true;
@@ -224,19 +240,21 @@ function removeItemFromInventory(index) {
     updateSlotVisual(index);
 }
 
+const objectModalElement = document.querySelector(".object-modal");
+
 const leftArrow = document.querySelector(".room-navigation-left");
 const rightArrow = document.querySelector(".room-navigation-right");
 
 leftArrow.addEventListener("click", () => {
     rooms[gameData.room][currentRoomIndex].style.display = "none";
-    currentRoomIndex = (currentRoomIndex - 1)%4;
-    if (currentRoomIndex < 0) currentRoomIndex = 3;
+    currentRoomIndex = (currentRoomIndex + 1)%4;
     rooms[gameData.room][currentRoomIndex].style.display = "block";
 });
 
 rightArrow.addEventListener("click", () => {
     rooms[gameData.room][currentRoomIndex].style.display = "none";
-    currentRoomIndex = (currentRoomIndex + 1)%4;
+    currentRoomIndex = (currentRoomIndex - 1)%4;
+    if (currentRoomIndex < 0) currentRoomIndex = 3;
     rooms[gameData.room][currentRoomIndex].style.display = "block";
 });
 
@@ -244,31 +262,45 @@ let objects = {
     1: {
         0: {
             "door": {
-                name: "Wooden Door",
-                description: "An old wooden door. It seems to be locked.",
+                name: "",
+                description: "",
                 image: "images/rooms/room1/front/objects/door.png",
                 hoverImage: "images/rooms/room1/front/objects/selected/door.png",
                 posX: 83,
                 posY: 5,
-                height: 40
+                height: 40,
+                hasSpecialInteraction: true,
+                specialInteraction: (selfElement) => {
+                    openObjectModal("door");
+                }
             },
             "drawer": {
-                name: "Old Drawer",
-                description: "A dusty old drawer. It might contain something useful.",
+                name: "",
+                description: "",
                 image: "images/rooms/room1/front/objects/drawer.png",
                 hoverImage: "images/rooms/room1/front/objects/selected/drawer.png",
                 posX: 64,
                 posY: 30,
-                height: 19
+                height: 19,
+                hasSpecialInteraction: true,
+                specialInteraction: (selfElement) => {
+                    console.log("Drawer");
+                }
             },
             "painting": {
-                name: "Painting",
-                description: "A simple painting of a landscape.",
+                name: "",
+                description: "",
                 image: "images/rooms/room1/front/objects/painting.png",
                 hoverImage: "images/rooms/room1/front/objects/selected/painting.png",
                 posX: 64,
                 posY: 8,
-                height: 19
+                height: 19,
+                hasSpecialInteraction: true,
+                specialInteraction: (selfElement) => {
+                    if (addItemToInventory("painting")) {
+                        selfElement.style.display = "none";
+                    }
+                }
             },
             "mirror": {
                 name: "Mirror",
@@ -277,7 +309,11 @@ let objects = {
                 hoverImage: "images/rooms/room1/front/objects/selected/mirror.png",
                 posX: 21,
                 posY: 8,
-                height: 19
+                height: 19,
+                hasSpecialInteraction: false,
+                specialInteraction: (selfElement) => {
+                    return;
+                }
             },
             "sofa": {
                 name: "Sofa",
@@ -286,19 +322,93 @@ let objects = {
                 hoverImage: "images/rooms/room1/front/objects/selected/sofa.png",
                 posX: 21,
                 posY: 29,
-                height: 20
+                height: 20,
+                hasSpecialInteraction: false,
+                specialInteraction: (selfElement) => { return; }
             },
             "plant": {
-                name: "Potted Plant",
-                description: "A large potted plant.",
+                name: "",
+                description: "",
                 image: "images/rooms/room1/front/objects/plant.png",
                 hoverImage: "images/rooms/room1/front/objects/selected/plant.png",
                 posX: 3,
                 posY: 25,
-                height: 24
+                height: 24,
+                hasSpecialInteraction: true,
+                specialInteraction: (selfElement) => {
+                    console.log("Plant");
+                }
             }
         },
-        1: {},
+        1: {
+            "plant-left": {
+                name: "",
+                description: "",
+                image: "images/rooms/room1/left/objects/plant-left.png",
+                hoverImage: "images/rooms/room1/left/objects/selected/plant-left.png",
+                posX: 5,
+                posY: 6,
+                height: 16,
+                hasSpecialInteraction: true,
+                specialInteraction: (selfElement) => {
+                    document.querySelector(".room1 .room-left .room-object[data-object='plant-right']").style.display = "block";
+                    selfElement.style.display = "none";
+                }
+            },
+            "plant-right": {
+                name: "",
+                description: "",
+                image: "images/rooms/room1/left/objects/plant-right.png",
+                hoverImage: "images/rooms/room1/left/objects/selected/plant-right.png",
+                posX: 18,
+                posY: 6,
+                height: 16,
+                hasSpecialInteraction: true,
+                specialInteraction: (selfElement) => {
+                    document.querySelector(".room1 .room-left .room-object[data-object='plant-left']").style.display = "block";
+                    selfElement.style.display = "none";
+                }
+            },
+            "bookshelf": {
+                name: "Bookshelf",
+                description: "A wooden bookshelf filled with old books.",
+                image: "images/rooms/room1/left/objects/bookshelf.png",
+                hoverImage: "images/rooms/room1/left/objects/selected/bookshelf.png",
+                posX: 86,
+                posY: 13,
+                height: 34,
+                hasSpecialInteraction: false,
+                specialInteraction: (selfElement) => {
+                    return;
+                }
+            },
+            "chest": {
+                name: "",
+                description: "",
+                image: "images/rooms/room1/left/objects/chest.png",
+                hoverImage: "images/rooms/room1/left/objects/selected/chest.png",
+                posX: 47,
+                posY:  33,
+                height: 16,
+                hasSpecialInteraction: true,
+                specialInteraction: (selfElement) => {
+                    console.log("Chest");
+                }
+            },
+            "crack": {
+                name: "",
+                description: "",
+                image: "images/rooms/room1/left/objects/crack.png",
+                hoverImage: "images/rooms/room1/left/objects/selected/crack.png",
+                posX: 16,
+                posY: 44,
+                height: 5,
+                hasSpecialInteraction: true,
+                specialInteraction: (selfElement) => {
+                    console.log("Crack");
+                }
+            }
+        },
         2: {},
         3: {}
     }
@@ -321,6 +431,7 @@ function fillRooms() {
                 const object = angleObjects[objectKey];
                 const objectElement = document.createElement("img");
                 objectElement.className = "room-object";
+                objectElement.dataset.object = objectKey;
                 objectElement.src = object.image;
                 objectElement.style.position = "absolute";
                 objectElement.style.top = `${((object.posY)/54)*100}%`;
@@ -330,10 +441,14 @@ function fillRooms() {
                 roomElement.appendChild(objectElement);
 
                 objectElement.addEventListener("click", () => {
-                    itemViewNameElement.innerText = object.name;
-                    itemViewDescriptionElement.innerText = object.description;
-                    itemViewImageElement.src = object.image;
-                    itemViewElement.style.display = "flex";
+                    if (object.hasSpecialInteraction) {
+                        object.specialInteraction(objectElement);
+                    } else {
+                        itemViewNameElement.innerText = object.name;
+                        itemViewDescriptionElement.innerText = object.description;
+                        itemViewImageElement.src = object.image;
+                        itemViewElement.style.display = "flex";
+                    }
                 });
 
                 objectElement.addEventListener("mouseover", () => {
@@ -352,4 +467,28 @@ function fillRooms() {
     });
 }
 
+function openObjectModal(object) {
+    objectModalElement.style.display = "flex";
+    const objectContainer = objectModalElement.querySelector(`.object-container.${object}-object`);
+    objectContainer.style.display = "flex";
+    currentObject = object;
+}
+
+function closeObjectModal() {
+    objectModalElement.style.display = "none";
+    objectModalElement.querySelectorAll(".object-container").forEach((child) => {
+        child.style.display = "none";
+    });
+    currentObject = null;
+}
+
+const closeObjectModalButton = objectModalElement.querySelector(".object-modal-close");
+closeObjectModalButton.addEventListener("click", () => {
+    closeObjectModal();
+});
+
 start();
+
+function winGame() {
+    console.log("You win!");
+}

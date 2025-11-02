@@ -73,6 +73,11 @@ body {
 
 img {
     image-rendering: pixelated;
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .item-view {
@@ -91,7 +96,8 @@ img {
     z-index: 100;
 }
 
-.item-view-close {
+.item-view-close, .object-modal-close {
+    color: #ebebeb;
     position: absolute;
     top: 30px;
     right: 30px;
@@ -247,4 +253,31 @@ img {
     image-rendering: pixelated;
     pointer-events: none;
     z-index: 4;
+}
+
+.object-modal {
+    display: none;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 80vh;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 11;
+}
+
+.object-modal-close {
+    cursor: pointer;
+    z-index: 11;
+}
+
+.object-image {
+    height: 70vh;
+}
+
+.room-object[data-object="plant-right"] {
+    display: none;
 }
