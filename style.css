@@ -68,3 +68,79 @@ body {
     background-color: #2b2c2e;
     border-radius: 4px;
 }
+
+img {
+    image-rendering: pixelated;
+}
+
+.item-view {
+    position: absolute;
+    height: 80vh;
+    width: 100%;
+    color: #ebebeb;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+}
+
+.item-view-close {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    font-size: 3em;
+    cursor: pointer;
+}
+
+.item-view-image {
+    height: 50vh;
+}
+
+.item-view-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 50vh;
+    gap: 20px;
+}
+
+.item-view-name {
+    font-size: 3em;
+    font-weight: bold;
+}
+
+.item-view-description {
+    font-size: 1.5em;
+}
+
+.key-prompts {
+    position: absolute;
+    bottom: 20vh;
+    left: 10px;
+    color: #ebebeb;
+    font-size: 1.2em;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.key-prompt {
+    display: none;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+}
+
+.key-prompt-key {
+    background-color: #6d6f74;
+    display: grid;
+    place-items: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+    border: 2px solid #464749;
+}

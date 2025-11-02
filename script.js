@@ -1,7 +1,5 @@
 const inventoryElement = document.querySelector(".inventory");
 
-let gameData = {};
-
 const items = {
     "flashlight": {
         name: "Flashlight",
@@ -14,7 +12,7 @@ const items = {
     },
     "test": {
         name: "Test",
-        description: "",
+        description: "test",
         image: "images/testImage.png",
         hasItemFunction: true,
         itemFunction: () => { console.log("Test"); },
@@ -30,25 +28,26 @@ let slotItem = {
     itemFunction: () => { return; },
 }
 
+let gameData = {
+    inventory: [slotItem, slotItem, slotItem, slotItem, slotItem, slotItem, slotItem, slotItem, slotItem]
+};
+
 let selectedSlotIndex;
 
-loadData();
+const keyPromptEElement = document.querySelector(".key-prompt-e");
+const keyPromptQElement = document.querySelector(".key-prompt-q");
 
-function saveData() {
-    localStorage.setItem("HauntedHouseGameData", JSON.stringify(gameData));
-}
+const itemViewElement = document.querySelector(".item-view");
+const itemViewNameElement = itemViewElement.querySelector(".item-view-name");
+const itemViewDescriptionElement = itemViewElement.querySelector(".item-view-description");
+const itemViewImageElement = itemViewElement.querySelector(".item-view-image");
+const itemViewCloseButton = itemViewElement.querySelector(".item-view-close");
 
-function loadData() {
-    const savedGameData = localStorage.getItem("HauntedHouseGameData");
-    if (savedGameData) {
-        gameData = JSON.parse(savedGameData);
-    } else {
-        gameData = {
-            inventory: [slotItem, slotItem, slotItem, slotItem, slotItem, slotItem, slotItem, slotItem, slotItem]
-        }
-    }
-    start();
-}
+itemViewCloseButton.addEventListener("click", () => {
+    itemViewElement.style.display = "none";
+});
+
+start();
 
 function start() {
     createInventory();
@@ -57,6 +56,7 @@ function start() {
 document.addEventListener("keydown", (e) => {
     if (e.key === "t") {
         console.log(addItemToInventory("test"));
+        console.log(addItemToInventory("flashlight"));
     }
     if (e.key === "x") {
         if (selectedSlotIndex != null) {
@@ -68,6 +68,19 @@ document.addEventListener("keydown", (e) => {
             gameData.inventory[selectedSlotIndex].itemFunction();
         }
     }
+
+    if (e.key === "q") {
+        if (selectedSlotIndex != null && itemViewElement.style.display === "none") {
+            const slot = gameData.inventory[selectedSlotIndex];
+            itemViewNameElement.innerText = slot.name;
+            itemViewDescriptionElement.innerText = slot.description;
+            itemViewImageElement.src = slot.image;
+            itemViewElement.style.display = "flex";
+        } else {
+            itemViewElement.style.display = "none";
+        }
+    }
+
     if (e.key === "i") {
         console.log(gameData.inventory);
         console.log(selectedSlotIndex);
@@ -109,6 +122,8 @@ function toggleSelectSlot(index) {
     if (slotElement.classList.contains("selected")) {
             slotElement.classList.remove("selected");
             selectedSlotIndex = null;
+            keyPromptEElement.style.display = "none";
+            keyPromptQElement.style.display = "none";
         }
     else if (slot.item) {
         slotElements.forEach((element) => {
@@ -116,6 +131,8 @@ function toggleSelectSlot(index) {
         });
         slotElement.classList.add("selected");
         selectedSlotIndex = index;
+        keyPromptEElement.style.display = slot.hasItemFunction ? "flex" : "none";
+        keyPromptQElement.style.display = "flex";
     }
 }
 
