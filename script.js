@@ -8,7 +8,9 @@ const items = {
         hasItemFunction: true,
         itemFunction: () => {
             console.log("Using flashlight");
-        }
+        },
+        hasDifferentViewVisual: false,
+        viewVisual: ""
     },
     "test": {
         name: "Test",
@@ -16,6 +18,8 @@ const items = {
         image: "images/testImage.png",
         hasItemFunction: true,
         itemFunction: () => { console.log("Test"); },
+        hasDifferentViewVisual: false,
+        viewVisual: ""
     }
 }
 
@@ -26,14 +30,16 @@ let slotItem = {
     image: "",
     hasItemFunction: false,
     itemFunction: () => { return; },
+    hasDifferentViewVisual: false,
+    viewVisual: ""
 }
 
 const rooms = {
     1: {
         0: document.querySelector(".room1 .room-front"),
         1: document.querySelector(".room1 .room-left"),
-        2: document.querySelector(".room1 .room-right"),
-        3: document.querySelector(".room1 .room-back")
+        2: document.querySelector(".room1 .room-back"),
+        3: document.querySelector(".room1 .room-right")
     }
 }
 
@@ -43,7 +49,7 @@ let gameData = {
 };
 
 let selectedSlotIndex;
-let currentRoomIndex = 1;
+let currentRoomIndex = 0;
 
 const keyPromptEElement = document.querySelector(".key-prompt-e");
 const keyPromptQElement = document.querySelector(".key-prompt-q");
@@ -75,8 +81,6 @@ itemViewCloseButton.addEventListener("click", () => {
     itemViewElement.style.display = "none";
 });
 
-start();
-
 function start() {
     createInventory();
     updateTime();
@@ -90,6 +94,7 @@ function start() {
         updateTime();
     }, 1000);
     rooms[gameData.room][currentRoomIndex].style.display = "block";
+    fillRooms();
 }
 
 document.addEventListener("keydown", (e) => {
@@ -113,7 +118,7 @@ document.addEventListener("keydown", (e) => {
             const slot = gameData.inventory[selectedSlotIndex];
             itemViewNameElement.innerText = slot.name;
             itemViewDescriptionElement.innerText = slot.description;
-            itemViewImageElement.src = slot.image;
+            itemViewImageElement.src = (slot.hasDifferentViewVisual ? slot.viewVisual : slot.image);
             itemViewElement.style.display = "flex";
         } else {
             itemViewElement.style.display = "none";
@@ -234,3 +239,117 @@ rightArrow.addEventListener("click", () => {
     currentRoomIndex = (currentRoomIndex + 1)%4;
     rooms[gameData.room][currentRoomIndex].style.display = "block";
 });
+
+let objects = {
+    1: {
+        0: {
+            "door": {
+                name: "Wooden Door",
+                description: "An old wooden door. It seems to be locked.",
+                image: "images/rooms/room1/front/objects/door.png",
+                hoverImage: "images/rooms/room1/front/objects/selected/door.png",
+                posX: 83,
+                posY: 5,
+                height: 40
+            },
+            "drawer": {
+                name: "Old Drawer",
+                description: "A dusty old drawer. It might contain something useful.",
+                image: "images/rooms/room1/front/objects/drawer.png",
+                hoverImage: "images/rooms/room1/front/objects/selected/drawer.png",
+                posX: 64,
+                posY: 30,
+                height: 19
+            },
+            "painting": {
+                name: "Painting",
+                description: "A simple painting of a landscape.",
+                image: "images/rooms/room1/front/objects/painting.png",
+                hoverImage: "images/rooms/room1/front/objects/selected/painting.png",
+                posX: 64,
+                posY: 8,
+                height: 19
+            },
+            "mirror": {
+                name: "Mirror",
+                description: "A mirror hanging on the wall.",
+                image: "images/rooms/room1/front/objects/mirror.png",
+                hoverImage: "images/rooms/room1/front/objects/selected/mirror.png",
+                posX: 21,
+                posY: 8,
+                height: 19
+            },
+            "sofa": {
+                name: "Sofa",
+                description: "A sofa.",
+                image: "images/rooms/room1/front/objects/sofa.png",
+                hoverImage: "images/rooms/room1/front/objects/selected/sofa.png",
+                posX: 21,
+                posY: 29,
+                height: 20
+            },
+            "plant": {
+                name: "Potted Plant",
+                description: "A large potted plant.",
+                image: "images/rooms/room1/front/objects/plant.png",
+                hoverImage: "images/rooms/room1/front/objects/selected/plant.png",
+                posX: 3,
+                posY: 25,
+                height: 24
+            }
+        },
+        1: {},
+        2: {},
+        3: {}
+    }
+}
+
+function fillRooms() {
+    const roomHeight = 80;
+    let roomWidth = 177.7777;
+    const screenWidth = window.innerWidth;
+    const leftOffsetPixels = (screenWidth - roomWidth * window.innerHeight/100) / 2;
+
+    const hoverImageElement = document.querySelector(".room-selected");
+
+    Object.keys(objects).forEach((roomKey) => {
+        const room = objects[roomKey];
+        Object.keys(room).forEach((angleKey) => {
+            const angleObjects = room[angleKey];
+            const roomElement = rooms[roomKey][angleKey];
+            Object.keys(angleObjects).forEach((objectKey) => {
+                const object = angleObjects[objectKey];
+                const objectElement = document.createElement("img");
+                objectElement.className = "room-object";
+                objectElement.src = object.image;
+                objectElement.style.position = "absolute";
+                objectElement.style.top = `${((object.posY)/54)*100}%`;
+                objectElement.style.left = `calc(${(object.posX/120)*177.7777}vh)`;
+                objectElement.style.height = `${(object.height/54)*roomHeight}vh`;
+                objectElement.style.transform = `translateX(${leftOffsetPixels}px)`;
+                roomElement.appendChild(objectElement);
+
+                objectElement.addEventListener("click", () => {
+                    itemViewNameElement.innerText = object.name;
+                    itemViewDescriptionElement.innerText = object.description;
+                    itemViewImageElement.src = object.image;
+                    itemViewElement.style.display = "flex";
+                });
+
+                objectElement.addEventListener("mouseover", () => {
+                    if (object.hoverImage) {
+                        hoverImageElement.src = object.hoverImage;
+                        hoverImageElement.style.display = "block";
+                    }
+                });
+
+                objectElement.addEventListener("mouseout", () => {
+                    hoverImageElement.src = "";
+                    hoverImageElement.style.display = "none";
+                });
+            });
+        });
+    });
+}
+
+start();

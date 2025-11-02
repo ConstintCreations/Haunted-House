@@ -82,7 +82,7 @@ img {
     height: 80vh;
     width: 100%;
     color: #ebebeb;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.8);
     display: none;
     flex-direction: row;
     align-items: center;
@@ -161,6 +161,7 @@ img {
     justify-content: space-between;
     padding: 0px 75px;
     z-index: 5;
+    pointer-events: none;
 }
 
 .room-navigation-arrow {
@@ -170,6 +171,7 @@ img {
     cursor: pointer;
     user-select: none;
     transition: font-size 0.2s;
+    pointer-events: all;
 }
 
 .room-navigation-right {
@@ -181,7 +183,7 @@ img {
 }
 
 .room {
-    position: absolute;
+    position: relative;
     height: 80vh;
     width: 100%;
     top: 0;
@@ -190,16 +192,7 @@ img {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-}
-
-.room-image {
-    position: relative;
-    left: 50%;
-    translate: -50%;
-    height: 100%;
-    width: auto;
-    max-width: 100%;
-    image-rendering: pixelated;
+    z-index: 1;
 }
 
 .timer {
@@ -210,4 +203,48 @@ img {
     color: #ff5959;
     font-size: 2.5em;
     z-index: 8;
+    pointer-events: none;
+}
+
+.room-image {
+    position: absolute;
+    left: 50%;
+    translate: -50%;
+    height: 80vh;
+    width: 177.7777vh;
+    image-rendering: pixelated;
+}
+
+.room-darkness {
+    z-index: 3;
+    position: absolute;
+    left: 50%;
+    translate: -50%;
+    height: 80vh;
+    width: 177.7777vh;
+    image-rendering: pixelated;
+    pointer-events: none;
+}
+
+.room-object {
+    position: absolute;
+    left: 50%;
+    height: 80vh;
+    width: auto;
+    max-width: 100%;
+    image-rendering: pixelated;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.room-selected {
+    display: none;
+    position: absolute;
+    left: 50%;
+    translate: -50%;
+    height: 80vh;
+    width: 177.7777vh;
+    image-rendering: pixelated;
+    pointer-events: none;
+    z-index: 4;
 }
