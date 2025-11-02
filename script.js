@@ -28,11 +28,22 @@ let slotItem = {
     itemFunction: () => { return; },
 }
 
+const rooms = {
+    1: {
+        0: document.querySelector(".room1 .room-front"),
+        1: document.querySelector(".room1 .room-left"),
+        2: document.querySelector(".room1 .room-right"),
+        3: document.querySelector(".room1 .room-back")
+    }
+}
+
 let gameData = {
-    inventory: [slotItem, slotItem, slotItem, slotItem, slotItem, slotItem, slotItem, slotItem, slotItem]
+    inventory: [slotItem, slotItem, slotItem, slotItem, slotItem, slotItem, slotItem, slotItem, slotItem],
+    room: 1,
 };
 
 let selectedSlotIndex;
+let currentRoomIndex = 1;
 
 const keyPromptEElement = document.querySelector(".key-prompt-e");
 const keyPromptQElement = document.querySelector(".key-prompt-q");
@@ -43,6 +54,23 @@ const itemViewDescriptionElement = itemViewElement.querySelector(".item-view-des
 const itemViewImageElement = itemViewElement.querySelector(".item-view-image");
 const itemViewCloseButton = itemViewElement.querySelector(".item-view-close");
 
+const timerElement = document.querySelector(".timer");
+let time = 5 * 60;
+
+let timerInterval;
+
+
+
+function updateTime() {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    timerElement.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function gameOver() {
+
+}
+
 itemViewCloseButton.addEventListener("click", () => {
     itemViewElement.style.display = "none";
 });
@@ -51,6 +79,17 @@ start();
 
 function start() {
     createInventory();
+    updateTime();
+    timerInterval = setInterval(() => {
+        time--;
+        if (time < 0) {
+            gameOver();
+            clearInterval(timerInterval);
+            return;
+        };
+        updateTime();
+    }, 1000);
+    rooms[gameData.room][currentRoomIndex].style.display = "block";
 }
 
 document.addEventListener("keydown", (e) => {
@@ -171,6 +210,7 @@ function updateSlotVisual(index) {
 }
 
 function removeItemFromInventory(index) {
+    itemViewElement.style.display = "none";
     gameData.inventory[index] = slotItem;
     if (index === selectedSlotIndex) {
         toggleSelectSlot(index);
@@ -178,3 +218,19 @@ function removeItemFromInventory(index) {
     }
     updateSlotVisual(index);
 }
+
+const leftArrow = document.querySelector(".room-navigation-left");
+const rightArrow = document.querySelector(".room-navigation-right");
+
+leftArrow.addEventListener("click", () => {
+    rooms[gameData.room][currentRoomIndex].style.display = "none";
+    currentRoomIndex = (currentRoomIndex - 1)%4;
+    if (currentRoomIndex < 0) currentRoomIndex = 3;
+    rooms[gameData.room][currentRoomIndex].style.display = "block";
+});
+
+rightArrow.addEventListener("click", () => {
+    rooms[gameData.room][currentRoomIndex].style.display = "none";
+    currentRoomIndex = (currentRoomIndex + 1)%4;
+    rooms[gameData.room][currentRoomIndex].style.display = "block";
+});
