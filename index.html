@@ -18,15 +18,34 @@
             
         </div>
 
-        <div class="object-modal">
+        <div class="object-modal" style="display: none;">
             <div class="object-container door-object" style="display: none;">
                 <img src="images/modal-object/door.png" class="object-image">
             </div>
             <div class="object-container drawer-object" style="display: none;">
                 <img src="images/modal-object/drawer.png" class="object-image">
+                <img src="images/items/flashlight.png" class="flashlight-item" style="height: 30vh; position: absolute; top: 40%; left: 50%; transform: translateX(-50%) translateY(-50%); cursor:pointer;" onclick="if(addItemToInventory('flashlight')) { this.style.display='none'; }">
             </div>
-            <div class="object-container plant-object" style="display: none;">
-                <img src="images/modal-object/plant.png" class="object-image">
+            <div class="object-container chest-object" style="display: none;">
+                <img src="images/modal-object/chest.png" class="object-image chest-object-image">
+            </div>
+            <div class="object-container crack-object" style="display: none;">
+                <img src="images/modal-object/crack.png" class="object-image crack-object-image" data=lit="false">
+                <img src="images/items/crack-key.png" class="crack-object-key" data-taken="false" style="display: none; height: 30vh; position: absolute; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%); cursor:pointer;" onclick="if(addItemToInventory('crack-key')) { this.style.display='none'; this.dataset.taken='true'; }">
+            </div>
+            <div class="object-container vent-object" style="display: none;">
+                <img src="images/modal-object/vent.png" class="object-image vent-object-image">
+                <img class="vent-object-item" src="images/items/note.png" style="display: none; height: 30vh; position: absolute; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%); cursor:pointer;" onclick="if(addItemToInventory('note')) { this.style.display='none'; }">
+            </div>
+            <div class="object-container back-safe-object" style="display: none;">
+                <img src="images/modal-object/back-safe.png" class="object-image back-safe-object-image">
+                <div class="safe-inputs">
+                    <div class="safe-input"><i class="fa-solid fa-chevron-left" onclick="updateSafe(0, -1)"></i><div class="safe-number">0</div><i class="fa-solid fa-chevron-right" onclick="updateSafe(0, 1)"></i></div>
+                    <div class="safe-input"><i class="fa-solid fa-chevron-left" onclick="updateSafe(1, -1)"></i><div class="safe-number">0</div><i class="fa-solid fa-chevron-right" onclick="updateSafe(1, 1)"></i></div>
+                    <div class="safe-input"><i class="fa-solid fa-chevron-left" onclick="updateSafe(2, -1)"></i><div class="safe-number">0</div><i class="fa-solid fa-chevron-right" onclick="updateSafe(2, 1)"></i></div>
+                    <div class="safe-input"><i class="fa-solid fa-chevron-left" onclick="updateSafe(3, -1)"></i><div class="safe-number">0</div><i class="fa-solid fa-chevron-right" onclick="updateSafe(3, 1)"></i></div>
+                </div>
+                <img class="back-safe-object-item" src="images/items/screwdriver.png" style="display: none; height: 30vh; position: absolute; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%); cursor:pointer;" onclick="if(addItemToInventory('screwdriver')) { this.style.display='none'; }">
             </div>
             <i class="fa-solid fa-xmark object-modal-close"></i>
         </div>

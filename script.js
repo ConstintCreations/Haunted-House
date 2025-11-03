@@ -1,23 +1,33 @@
 const inventoryElement = document.querySelector(".inventory");
 
+document.querySelector(".crack-object-image").dataset.lit = "false";
+document.querySelector(".crack-object-key").dataset.taken = "false";
+
+
 const items = {
     "flashlight": {
         name: "Flashlight",
-        description: "",
-        image: "images/testImage.png",
+        description: "Can be used to light up dark areas.",
+        image: "images/items/flashlight.png",
         hasItemFunction: true,
         itemFunction: () => {
-            console.log("Using flashlight");
+            if (currentObject === "crack") {
+                crackElement = document.querySelector(".crack-object-image");
+                if (crackElement.dataset.lit == "false") {
+                    crackElement.src = "images/modal-object/crack-light.png";
+                    crackElement.dataset.lit = "true";
+                    crackKeyElement = document.querySelector(".crack-object-key");
+                    if (crackKeyElement.dataset.taken == "false") {
+                        crackKeyElement.style.display = "block";
+                    }
+                } else {
+                    crackElement.src = "images/modal-object/crack.png";
+                    crackElement.dataset.lit = "false";
+                    crackKeyElement = document.querySelector(".crack-object-key");
+                    crackKeyElement.style.display = "none";
+                }
+            }
         },
-        hasDifferentViewVisual: false,
-        viewVisual: ""
-    },
-    "test": {
-        name: "Test",
-        description: "test",
-        image: "images/testImage.png",
-        hasItemFunction: true,
-        itemFunction: () => { console.log("Test"); },
         hasDifferentViewVisual: false,
         viewVisual: ""
     },
@@ -29,6 +39,47 @@ const items = {
         itemFunction: () => { return; },
         hasDifferentViewVisual: true,
         viewVisual: "images/painting-back.png"
+    },
+    "crack-key": {
+        name: "Small Key",
+        description: "A small key that was hidden in a hole in the floor.",
+        image: "images/items/crack-key.png",
+        hasItemFunction: true,
+        itemFunction: () => { 
+            if (currentObject === "chest") {
+                const chestElement = document.querySelector(".chest-object-image");
+                chestElement.src = "images/modal-object/chest-open.png";
+                const chestItemElement = document.querySelector(".chest-object-item");
+                chestItemElement.style.display = "block";
+            }
+        },
+        hasDifferentViewVisual: false,
+        viewVisual: ""
+    },
+    "screwdriver": {
+        name: "Screwdriver",
+        description: "A flathead screwdriver.",
+        image: "images/items/screwdriver.png",
+        hasItemFunction: true,
+        itemFunction: () => { 
+            if (currentObject === "vent") {
+                const ventElement = document.querySelector(".vent-object-image");
+                ventElement.src = "images/modal-object/vent-open.png";
+                const ventItemElement = document.querySelector(".vent-object-item");
+                ventItemElement.style.display = "block";
+            }
+        },
+        hasDifferentViewVisual: false,
+        viewVisual: ""
+    },
+    "note": {
+        name: "Note",
+        description: "A note that reads: 'Maybe count the books on the bookshelf.'",
+        image: "images/items/note.png",
+        hasItemFunction: false,
+        itemFunction: () => { return; },
+        hasDifferentViewVisual: false,
+        viewVisual: ""
     }
 }
 
@@ -108,16 +159,7 @@ function start() {
 }
 
 document.addEventListener("keydown", (e) => {
-    if (e.key === "t") {
-        console.log(addItemToInventory("test"));
-        console.log(addItemToInventory("flashlight"));
-    }
-    if (e.key === "x") {
-        if (selectedSlotIndex != null) {
-            removeItemFromInventory(selectedSlotIndex);
-        }
-    }
-    if (e.key === "u" || e.key === "e") {
+    if (e.key === "e") {
         if (selectedSlotIndex != null && gameData.inventory[selectedSlotIndex].hasItemFunction) {
             gameData.inventory[selectedSlotIndex].itemFunction();
         }
@@ -137,11 +179,6 @@ document.addEventListener("keydown", (e) => {
         } else {
             itemViewElement.style.display = "none";
         }
-    }
-
-    if (e.key === "i") {
-        console.log(gameData.inventory);
-        console.log(selectedSlotIndex);
     }
 });
 
@@ -284,7 +321,7 @@ let objects = {
                 height: 19,
                 hasSpecialInteraction: true,
                 specialInteraction: (selfElement) => {
-                    console.log("Drawer");
+                    openObjectModal("drawer");
                 }
             },
             "painting": {
@@ -317,7 +354,7 @@ let objects = {
             },
             "sofa": {
                 name: "Sofa",
-                description: "A sofa.",
+                description: "A comfy looking sofa.",
                 image: "images/rooms/room1/front/objects/sofa.png",
                 hoverImage: "images/rooms/room1/front/objects/selected/sofa.png",
                 posX: 21,
@@ -327,16 +364,16 @@ let objects = {
                 specialInteraction: (selfElement) => { return; }
             },
             "plant": {
-                name: "",
-                description: "",
+                name: "Plant",
+                description: "Just a regular plant.",
                 image: "images/rooms/room1/front/objects/plant.png",
                 hoverImage: "images/rooms/room1/front/objects/selected/plant.png",
                 posX: 3,
                 posY: 25,
                 height: 24,
-                hasSpecialInteraction: true,
+                hasSpecialInteraction: false,
                 specialInteraction: (selfElement) => {
-                    console.log("Plant");
+                    return;
                 }
             }
         },
@@ -392,7 +429,7 @@ let objects = {
                 height: 16,
                 hasSpecialInteraction: true,
                 specialInteraction: (selfElement) => {
-                    console.log("Chest");
+                    openObjectModal("chest");
                 }
             },
             "crack": {
@@ -405,11 +442,38 @@ let objects = {
                 height: 5,
                 hasSpecialInteraction: true,
                 specialInteraction: (selfElement) => {
-                    console.log("Crack");
+                    openObjectModal("crack");
                 }
             }
         },
-        2: {},
+        2: {
+            "vent": {
+                name: "",
+                description: "",
+                image: "images/rooms/room1/back/objects/vent.png",
+                hoverImage: "images/rooms/room1/back/objects/selected/vent.png",
+                posX: 40,
+                posY: 33,
+                height: 10,
+                hasSpecialInteraction: true,
+                specialInteraction: (selfElement) => {
+                    openObjectModal("vent");
+                }
+            },
+            "back-safe": {
+                name: "",
+                description: "",
+                image: "images/rooms/room1/back/objects/back-safe.png",
+                hoverImage: "images/rooms/room1/back/objects/selected/back-safe.png",
+                posX: 61,
+                posY: 31,
+                height: 15,
+                hasSpecialInteraction: true,
+                specialInteraction: (selfElement) => {
+                    openObjectModal("back-safe", "");
+                }
+            }
+        },
         3: {}
     }
 }
@@ -491,4 +555,30 @@ start();
 
 function winGame() {
     console.log("You win!");
+}
+
+const safeNumberElements = document.querySelectorAll(".safe-number");
+safeNumberElements.forEach((element) => {
+    element.dataset.value = "0";
+});
+
+function updateSafe(pos, amount) {
+    const element = safeNumberElements[pos];
+    let value = parseInt(element.dataset.value);
+    value = (value + amount)%10;
+    if (value < 0) value = 9;
+    element.dataset.value = value.toString();
+    element.innerText = value.toString();
+    checkSafeCode();
+}
+
+function checkSafeCode() {
+    const code = Array.from(safeNumberElements).map( (el) => el.dataset.value).join("");
+    if (code === "0176") {
+        document.querySelector(".safe-inputs").remove();
+        const backSafeElement = document.querySelector(".back-safe-object-image");
+        backSafeElement.src = "images/modal-object/back-safe-open.png";
+        const backSafeItemElement = document.querySelector(".back-safe-object-item");
+        backSafeItemElement.style.display = "block";
+    }
 }

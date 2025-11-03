@@ -136,6 +136,7 @@ img {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    z-index: 200;
 }
 
 .key-prompt {
@@ -280,4 +281,29 @@ img {
 
 .room-object[data-object="plant-right"] {
     display: none;
+}
+
+.safe-inputs {
+    color: #ebebeb;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+    font-size: 2em;
+    margin-left: 20px;
+}
+
+.safe-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.safe-number {
+    font-size: 1.5em;
+}
+
+.fa-chevron-left, .fa-chevron-right {
+    cursor: pointer;
 }
