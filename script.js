@@ -74,7 +74,7 @@ const items = {
     },
     "note": {
         name: "Note",
-        description: "A note that reads: 'Maybe count the books on the bookshelf.'",
+        description: "A note that reads: 'Maybe count the books on the bookshelf for a code.'",
         image: "images/items/note.png",
         hasItemFunction: false,
         itemFunction: () => { return; },
@@ -135,11 +135,11 @@ const itemViewImageElement = itemViewElement.querySelector(".item-view-image");
 const itemViewCloseButton = itemViewElement.querySelector(".item-view-close");
 
 const timerElement = document.querySelector(".timer");
-let time = 5 * 60;
+let time = 3 * 60;
 
 let timerInterval;
 
-
+let gameWon = false;
 
 function updateTime() {
     const minutes = Math.floor(time / 60);
@@ -148,7 +148,9 @@ function updateTime() {
 }
 
 function gameOver() {
-
+    if (!gameWon) {
+        document.querySelector(".end-modal").style.display = "flex";
+    }
 }
 
 itemViewCloseButton.addEventListener("click", () => {
@@ -156,6 +158,7 @@ itemViewCloseButton.addEventListener("click", () => {
 });
 
 function start() {
+    document.querySelector(".title-screen").style.display = "none";
     createInventory();
     updateTime();
     timerInterval = setInterval(() => {
@@ -578,10 +581,12 @@ closeObjectModalButton.addEventListener("click", () => {
     closeObjectModal();
 });
 
-start();
-
 function winGame() {
-    console.log("You win!");
+    gameWon = true;
+    document.querySelector(".end-modal").style.display = "flex";
+    document.querySelector(".end-content h1").innerText = "You Escaped!";
+    document.querySelector(".end-content p").innerText = "Congratulations, you have escaped the haunted house!";
+    clearInterval(timerInterval);
 }
 
 const safeNumberElements = document.querySelectorAll(".safe-number");
@@ -634,4 +639,15 @@ function checkVaultCode() {
         const backSafeItemElement = document.querySelector(".vault-object-item");
         backSafeItemElement.style.display = "block";
     }
+}
+
+setInterval(tryFlickerLight, 500);
+
+const darknessElement = document.querySelector(".room-darkness");
+function tryFlickerLight() {
+    if (Math.random() > 0.05) return;
+    darknessElement.style.display = "none";
+    setTimeout(() => {
+        darknessElement.style.display = "block";
+    }, (Math.random() - 0.5) * 200 + 300);
 }

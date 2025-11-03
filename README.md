@@ -1,5 +1,5 @@
 # Haunted Escape Room
-You wake up trapped un a haunted house with only 5 minutes to escape by solving puzzles.
+You wake up trapped un a haunted house with only 3 minutes to escape by solving puzzles.
 
 ## Features
 - Inventory System
