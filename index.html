@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Haunted House</title>
+        <title>Haunted Escape Room</title>
         <link rel="stylesheet" href="style.css">
         <script src="script.js" defer></script>
         <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
@@ -46,6 +46,22 @@
                     <div class="safe-input"><i class="fa-solid fa-chevron-left" onclick="updateSafe(3, -1)"></i><div class="safe-number">0</div><i class="fa-solid fa-chevron-right" onclick="updateSafe(3, 1)"></i></div>
                 </div>
                 <img class="back-safe-object-item" src="images/items/screwdriver.png" style="display: none; height: 30vh; position: absolute; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%); cursor:pointer;" onclick="if(addItemToInventory('screwdriver')) { this.style.display='none'; }">
+            </div>
+            <div class="object-container vault-object" style="display: none;">
+                <div class="vault-inputs">
+                    <div class="vault-input"><i class="fa-solid fa-chevron-left" onclick="updateVault(0, -1)"></i><div class="vault-number">0</div><i class="fa-solid fa-chevron-right" onclick="updateVault(0, 1)"></i></div>
+                    <div class="vault-input"><i class="fa-solid fa-chevron-left" onclick="updateVault(1, -1)"></i><div class="vault-number">0</div><i class="fa-solid fa-chevron-right" onclick="updateVault(1, 1)"></i></div>
+                    <div class="vault-input"><i class="fa-solid fa-chevron-left" onclick="updateVault(2, -1)"></i><div class="vault-number">0</div><i class="fa-solid fa-chevron-right" onclick="updateVault(2, 1)"></i></div>
+                    <div class="vault-input"><i class="fa-solid fa-chevron-left" onclick="updateVault(3, -1)"></i><div class="vault-number">0</div><i class="fa-solid fa-chevron-right" onclick="updateVault(3, 1)"></i></div>
+                </div>
+                <img src="images/modal-object/vault.png" class="object-image vault-object-image">
+                <div class="vault-inputs">
+                    <div class="vault-input"><i class="fa-solid fa-chevron-left" onclick="updateVault(4, -1)"></i><div class="vault-number">0</div><i class="fa-solid fa-chevron-right" onclick="updateVault(4, 1)"></i></div>
+                    <div class="vault-input"><i class="fa-solid fa-chevron-left" onclick="updateVault(5, -1)"></i><div class="vault-number">0</div><i class="fa-solid fa-chevron-right" onclick="updateVault(5, 1)"></i></div>
+                    <div class="vault-input"><i class="fa-solid fa-chevron-left" onclick="updateVault(6, -1)"></i><div class="vault-number">0</div><i class="fa-solid fa-chevron-right" onclick="updateVault(6, 1)"></i></div>
+                    <div class="vault-input"><i class="fa-solid fa-chevron-left" onclick="updateVault(7, -1)"></i><div class="vault-number">0</div><i class="fa-solid fa-chevron-right" onclick="updateVault(7, 1)"></i></div>
+                </div>
+                <img class="vault-object-item" src="images/items/exit-key.png" style="display: none; height: 30vh; position: absolute; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%); cursor:pointer;" onclick="if(addItemToInventory('exit-key')) { this.style.display='none'; }">
             </div>
             <i class="fa-solid fa-xmark object-modal-close"></i>
         </div>

@@ -80,6 +80,19 @@ const items = {
         itemFunction: () => { return; },
         hasDifferentViewVisual: false,
         viewVisual: ""
+    },
+    "exit-key": {
+        name: "Exit Key",
+        description: "A key that looks like it could open a door.",
+        image: "images/items/exit-key.png",
+        hasItemFunction: true,
+        itemFunction: () => {
+            if (currentObject === "door") {
+                winGame();
+            }
+        },
+        hasDifferentViewVisual: false,
+        viewVisual: ""
     }
 }
 
@@ -104,7 +117,7 @@ const rooms = {
 }
 
 let gameData = {
-    inventory: [slotItem, slotItem, slotItem, slotItem, slotItem, slotItem, slotItem, slotItem, slotItem],
+    inventory: [slotItem, slotItem, slotItem, slotItem, slotItem, slotItem],
     room: 1,
 };
 
@@ -474,7 +487,21 @@ let objects = {
                 }
             }
         },
-        3: {}
+        3: {
+            "vault": {
+                name: "",
+                description: "",
+                image: "images/rooms/room1/right/objects/vault.png",
+                hoverImage: "images/rooms/room1/right/objects/selected/vault.png",
+                posX: 37,
+                posY:  19,
+                height: 27,
+                hasSpecialInteraction: true,
+                specialInteraction: (selfElement) => {
+                    openObjectModal("vault");
+                }
+            }
+        }
     }
 }
 
@@ -579,6 +606,32 @@ function checkSafeCode() {
         const backSafeElement = document.querySelector(".back-safe-object-image");
         backSafeElement.src = "images/modal-object/back-safe-open.png";
         const backSafeItemElement = document.querySelector(".back-safe-object-item");
+        backSafeItemElement.style.display = "block";
+    }
+}
+
+const vaultNumberElements = document.querySelectorAll(".vault-number");
+vaultNumberElements.forEach((element) => {
+    element.dataset.value = "0";
+});
+
+function updateVault(pos, amount) {
+    const element = vaultNumberElements[pos];
+    let value = parseInt(element.dataset.value);
+    value = (value + amount)%10;
+    if (value < 0) value = 9;
+    element.dataset.value = value.toString();
+    element.innerText = value.toString();
+    checkVaultCode();
+}
+
+function checkVaultCode() {
+    const code = Array.from(vaultNumberElements).map( (el) => el.dataset.value).join("");
+    if (code === "52932648") {
+        document.querySelectorAll(".vault-inputs").forEach((element) => {element.remove()});
+        const backSafeElement = document.querySelector(".vault-object-image");
+        backSafeElement.src = "images/modal-object/vault-open.png";
+        const backSafeItemElement = document.querySelector(".vault-object-item");
         backSafeItemElement.style.display = "block";
     }
 }

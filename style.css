@@ -24,9 +24,9 @@ body {
     padding: 25px;
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
-    gap: 30px;
+    gap: 50px;
     overflow-x: auto;
 }
 
@@ -283,24 +283,24 @@ img {
     display: none;
 }
 
-.safe-inputs {
+.safe-inputs, .vault-inputs {
     color: #ebebeb;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 15px;
     font-size: 2em;
-    margin-left: 20px;
+    margin: 20px;
 }
 
-.safe-input {
+.safe-input, .vault-input {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 10px;
 }
 
-.safe-number {
+.safe-number, .vault-number {
     font-size: 1.5em;
 }
 
